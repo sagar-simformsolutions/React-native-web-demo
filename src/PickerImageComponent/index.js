@@ -1,35 +1,58 @@
-import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
+import React, { Component } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+  Button,
+} from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
 
 export default class PickerImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fileData: '',
+      fileData: null,
     };
   }
 
   async launchPicker() {
     const result = await launchImageLibrary();
-    console.log(result, '<=== result ');
+    console.log(result, "<=== result ");
     this.setState({
       fileData: result?.assets?.[0]?.uri,
     });
   }
 
   render() {
+    const { fileData } = this.state;
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <TouchableOpacity onPress={() => this.launchPicker()}>
-          <Text>Open Picker</Text>
-        </TouchableOpacity>
-        <Image
-          style={{
-            width: 350,
-            height: 350,
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Button
+          style={{ marginTop: 150 }}
+          onPress={() => this.launchPicker()}
+          title="Open Picker"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+
+        {fileData && (
+          <Image
+            style={{
+              width: 350,
+              height: 350,
+            }}
+            source={{ uri: fileData }}
+          />
+        )}
+
+        <Button
+          onPress={() => {
+            this.props.navigation.goBack();
           }}
-          source={{uri: this.state.fileData}}
+          title="Go Back"
+          color="#841584"
         />
       </View>
     );
