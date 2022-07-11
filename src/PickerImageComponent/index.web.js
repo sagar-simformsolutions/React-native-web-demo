@@ -3,13 +3,13 @@ import {
   View,
   ImageBackground,
   StyleSheet,
-  Button,
   TouchableOpacity,
   Text,
 } from "react-native";
 import { FileUploader } from "react-drag-drop-files";
 import { useFilePicker } from "react-sage";
 import { loadFile } from "react-sage/dist/utils";
+import { Button } from "native-base";
 
 const MAX_FILE_SIZE = 1;
 
@@ -87,12 +87,13 @@ export default class PickerImage extends Component {
           </View>
         </View>
 
-        <TouchableOpacity
-          onPress={() => this.props.navigation.goBack()}
+        <Button
+          size="sm"
+          onPress={() => this.props.navigation.navigate("Home")}
           style={styles.backButton}
         >
-          <Text>Go Back</Text>
-        </TouchableOpacity>
+          Go Back
+        </Button>
       </ImageBackground>
     );
   }
