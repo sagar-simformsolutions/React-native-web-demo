@@ -1,8 +1,8 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
-const appDirectory = path.resolve(__dirname, "../");
+const appDirectory = path.resolve(__dirname, "./");
+const { presets } = require(`${appDirectory}/babel.config.js`);
 
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
@@ -22,7 +22,8 @@ const babelLoaderConfiguration = {
     options: {
       cacheDirectory: true,
       // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
-      presets: ["module:metro-react-native-babel-preset"],
+      presets: presets,
+
       // Re-write paths to import only the modules needed by the app
       plugins: ["react-native-web"],
     },
@@ -31,34 +32,13 @@ const babelLoaderConfiguration = {
 
 // This is needed for webpack to import static images in JavaScript files.
 const imageLoaderConfiguration = {
-  test: /\.(gif|jpe?g|png|svg)$/,
-  use: {
-    loader: "url-loader",
-    options: {
-      name: "[name].[ext]",
-      esModule: false,
-    },
-  },
-};
-
-const jsxLoader = {
-  test: /\.(js|jsx)$/,
-  include: path.resolve(__dirname, "src"),
-  exclude: /(node_modules|bower_components|build)/,
-  use: ["babel-loader"],
-};
-
-const iconLoader = {
   test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
-  exclude: /node_modules/,
-  use: ["file-loader?name=[name].[ext]"], // ?name=[name].[ext] is only necessary to preserve the original file name
+  type: "asset/resource",
 };
 
 module.exports = {
   entry: [
     // load any web API polyfills
-    // path.resolve(appDirectory, 'polyfills-web.js'),
-    // your web-specific entry file
     path.resolve(appDirectory, "index.web.js"),
   ],
 
@@ -71,12 +51,7 @@ module.exports = {
   // ...the rest of your config
 
   module: {
-    rules: [
-      babelLoaderConfiguration,
-      imageLoaderConfiguration,
-      jsxLoader,
-      iconLoader,
-    ],
+    rules: [imageLoaderConfiguration, babelLoaderConfiguration],
   },
 
   resolve: {
